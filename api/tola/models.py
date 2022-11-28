@@ -1,5 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import MaxValueValidator, MinValueValidator
+
+class BaseModel(models.Model):
+
+    created_at = models.DateField(null=True)
+    updated_at = models.DateField(null=True)
+    active = models.BooleanField(null=False, default=True)
+
+    class Meta:
+        abstract = True
 
 class CustomUser(AbstractUser):
     
@@ -10,7 +20,7 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
-class Gym(models.Model):
+class Gym(BaseModel):
 
     name = models.CharField(max_length=50)
 
@@ -20,5 +30,10 @@ class Gym(models.Model):
 
     state = models.CharField(max_length=2)
     
-    zipcode = models.IntegerField()
+    zipcode = models.IntegerField(
+        validators=[
+            MinValueValidator(99_999),
+            MaxValueValidator(10_000)
+        ]
+    )
 # Create your models here.
