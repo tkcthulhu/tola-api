@@ -12,6 +12,8 @@ class BaseModel(models.Model):
         abstract = True
 
 class CustomUser(AbstractUser):
+
+    weight = models.FloatField(null=False, default=0)
     
     birthday = models.DateField(null=False, default='1990-11-11')
 
@@ -19,6 +21,19 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return self.username
+
+class user_gym(models.Model):
+
+    user = models.ForeignKey('CustomUser', on_delete=models.PROTECT)
+
+    gym = models.ForeignKey('Gym', on_delete=models.PROTECT)
+
+    date_joined = models.DateField(null=True)
+
+    date_modified = models.DateField(null=True)
+
+    active = models.BooleanField(default=True)
+
 
 class Gym(BaseModel):
 
@@ -32,8 +47,36 @@ class Gym(BaseModel):
     
     zipcode = models.IntegerField(
         validators=[
-            MinValueValidator(99_999),
-            MaxValueValidator(10_000)
+            MinValueValidator(10_000),
+            MaxValueValidator(99_999)
         ]
     )
-# Create your models here.
+
+    def __str__(self):
+        return self.name
+
+class Exercise(BaseModel):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
+class Max(BaseModel):
+
+    user = models.ForeignKey('CustomUser', on_delete=models.PROTECT)
+
+    exercise = models.ForeignKey('Exercise', on_delete=models.PROTECT)
+
+    num_of_reps = models.SmallIntegerField(
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(10)
+        ]
+    )
+
+    weight = models.IntegerField(
+        validators=[
+            MinValueValidator(10),
+            MaxValueValidator(99_999)
+        ]
+    )
