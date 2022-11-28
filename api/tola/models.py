@@ -10,15 +10,15 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return self.username
 
-# class Gym(models.Model):
+class Gym(models.Model):
 
-#     name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50)
 
-#     street = models.CharField(max_length=100)
+    street = models.CharField(max_length=100)
 
-#     city = models.CharField(max_length=100)
+    city = models.CharField(max_length=100)
 
-#     state = models.CharField(max_length=2)
+    state = models.CharField(max_length=2)
     
-#     zipcode = models.IntegerField()
+    zipcode = models.IntegerField()
 # Create your models here.
