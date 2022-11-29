@@ -58,6 +58,7 @@ class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
             exercise = Exercise.objects.get(id = max.exercise.id)
 
             maxes.append({
+                'id': exercise.id,
                 'exercise': exercise.name,
                 'weight': max.weight,
                 'reps': max.num_of_reps,
@@ -67,3 +68,7 @@ class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
         return maxes
 
 
+class MaxSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Max
+        fields = ['id', 'user', 'exercise', 'weight', 'num_of_reps', 'active']

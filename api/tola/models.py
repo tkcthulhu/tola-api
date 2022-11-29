@@ -34,6 +34,9 @@ class user_gym(models.Model):
 
     active = models.BooleanField(default=True)
 
+    class Meta:
+        unique_together = ('user', 'gym')
+
 
 class Gym(BaseModel):
 
@@ -56,7 +59,7 @@ class Gym(BaseModel):
         return self.name
 
 class Exercise(BaseModel):
-    name = models.CharField(max_length=100)
+    name = models.CharField(max_length=100, unique=True)
 
     def __str__(self):
         return self.name
@@ -80,3 +83,6 @@ class Max(BaseModel):
             MaxValueValidator(99_999)
         ]
     )
+
+    class Meta:
+        unique_together = ('user', 'exercise', 'num_of_reps', 'active')
