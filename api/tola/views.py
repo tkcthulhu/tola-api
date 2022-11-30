@@ -144,7 +144,7 @@ class MaxAPIView(APIView):
 
         response = Response()
 
-        response = {
+        response.data = {
             'message': 'Max updated successfully',
             'data': serializer.data,
         }

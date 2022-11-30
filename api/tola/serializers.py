@@ -19,6 +19,7 @@ class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
         model = CustomUser
 
         fields = ['id', 'username', 'first_name', 'last_name', 'birthday', 'email', 'groups', 'is_coach', 'gym', 'maxes']
+        
 
     def get_gym(self, obj):
 
