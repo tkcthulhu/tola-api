@@ -84,5 +84,8 @@ class Max(BaseModel):
         ]
     )
 
-    class Meta:
-        unique_together = ('user', 'exercise', 'num_of_reps', 'active')
+    def __str__(self):
+        return f'{self.user} {self.exercise} {self.active}'
+
+    # class Meta:
+    #     unique_together = ('user', 'exercise', 'num_of_reps', 'active')

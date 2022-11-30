@@ -105,7 +105,7 @@ class MaxAPIView(APIView):
 
         else:
 
-            data = Max.objects.all()
+            data = Max.objects.all().order_by('id')
 
             serializer = MaxSerializer(data, many=True)
 
@@ -146,6 +146,74 @@ class MaxAPIView(APIView):
 
         response = {
             'message': 'Max updated successfully',
+            'data': serializer.data,
+        }
+
+        return response
+
+class ExerciseAPIView(APIView):
+
+    def get_object(self, pk):
+
+        try:
+
+            return Exercise.objects.get(pk=pk)
+
+        except Exercise.DoesNotExist:
+
+            raise Http404
+
+    def get(self, request, pk=None, format=None):
+
+        if pk:
+            
+            data = self.get_object(pk)
+            
+            serializer = ExerciseSerializer(data)
+
+        else:
+
+            data = Exercise.objects.all().order_by('id')
+
+            serializer = ExerciseSerializer(data, many=True)
+
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+
+        data = request.data
+
+        serializer = ExerciseSerializer(data=data)
+
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save()
+
+        response = Response()
+
+        response.data = {
+            'message' : 'Exercise created successfully',
+            'data': serializer.data,
+        }
+
+        return response
+
+    def put(self, request, pk=None, format=None):
+
+        Exercise_to_update = Exercise.objects.get(pk=pk)
+
+        data = request.data
+
+        serializer = ExerciseSerializer(instance=Exercise_to_update, data=data, partial=True)
+
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save()
+
+        response = Response()
+
+        response = {
+            'message': 'Exercise updated successfully',
             'data': serializer.data,
         }
 
