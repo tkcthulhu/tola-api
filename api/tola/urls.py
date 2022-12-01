@@ -1,7 +1,12 @@
 from django.urls import path, include
 from rest_framework_simplejwt import views as jwt_views
+from rest_framework import routers
 
 from . import views
+
+router = routers.DefaultRouter()
+
+router.register(r'user_gym_view_set', views.UserGymViewSet)
 
 urlpatterns = [
     path('user/signup/', views.CustomUserAPIView.as_view(), name="create_user"),
