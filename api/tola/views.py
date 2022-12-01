@@ -76,7 +76,7 @@ class CustomUserAPIView(APIView):
 
         response = Response()
 
-        response = {
+        response.data = {
             'message': 'User updated successfully',
             'data': serializer.data,
         }
@@ -144,7 +144,7 @@ class MaxAPIView(APIView):
 
         response = Response()
 
-        response = {
+        response.data = {
             'message': 'Max updated successfully',
             'data': serializer.data,
         }
@@ -212,7 +212,7 @@ class ExerciseAPIView(APIView):
 
         response = Response()
 
-        response = {
+        response.data = {
             'message': 'Exercise updated successfully',
             'data': serializer.data,
         }
