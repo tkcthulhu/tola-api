@@ -4,6 +4,7 @@ from rest_framework_simplejwt import views as jwt_views
 from . import views
 
 urlpatterns = [
+    path('user/signup/', views.CustomUserAPIView.as_view(), name="create_user"),
     path('usersAPI/', views.CustomUserAPIView.as_view()),
     path('usersAPI/<str:pk>/', views.CustomUserAPIView.as_view()),
     path('maxAPI/', views.MaxAPIView.as_view()),
