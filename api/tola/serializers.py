@@ -50,12 +50,15 @@ class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
 
         id = obj.id
 
+
         if user_gym.objects.filter(user=id):
             pass
         else:
             return ''
 
-        my_gym = user_gym.objects.get(user = id)
+        my_gym = user_gym.objects.get(user = id, active=True)
+
+        user_gym_id = my_gym.id
 
         my_gym = my_gym.gym
 
@@ -64,6 +67,7 @@ class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
         return {
             'id': gym.id,
             'name': gym.name,
+            'user_gym_id': user_gym_id
         }
 
     def get_maxes(self, obj):
@@ -94,7 +98,6 @@ class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
 
         return maxes
 
-
 class MaxSerializer(serializers.ModelSerializer):
     class Meta:
         model = Max
@@ -104,3 +107,13 @@ class ExerciseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Exercise
         fields = ['id', 'name']
+
+class UserGymSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = user_gym
+        fields = ['id', 'user', 'gym', 'active', 'date_joined']
+
+class GymSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Gym
+        fields = ['id', 'name', 'street', 'city', 'state', 'zipcode']

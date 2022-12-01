@@ -35,7 +35,7 @@ class user_gym(models.Model):
     active = models.BooleanField(default=True)
 
     class Meta:
-        unique_together = ('user', 'gym')
+        unique_together = ('user', 'gym', 'active')
 
 
 class Gym(BaseModel):

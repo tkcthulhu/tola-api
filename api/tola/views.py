@@ -218,3 +218,139 @@ class ExerciseAPIView(APIView):
         }
 
         return response
+
+class UserGymAPIView(APIView):
+
+    def get_object(self, pk):
+
+        try:
+
+            return user_gym.objects.get(pk=pk)
+
+        except user_gym.DoesNotExist:
+
+            raise Http404
+
+    def get(self, request, pk=None, format=None):
+
+        if pk:
+
+            data = self.get_object(pk)
+            
+            serializer = UserGymSerializer(data)
+
+        else:
+
+            data = user_gym.objects.all()
+
+            serializer = UserGymSerializer(data, many=True)
+
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+
+        data = request.data
+
+        serializer = UserGymSerializer(data=data)
+
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save()
+
+        response = Response()
+
+        response.data = {
+            'message' : 'User created successfully',
+            'data': serializer.data,
+        }
+
+        return response
+
+    def put(self, request, pk=None, format=None):
+
+        UserGym_to_update = user_gym.objects.get(pk=pk)
+
+        data = request.data
+
+        serializer = UserGymSerializer(instance=UserGym_to_update, data=data, partial=True)
+
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save()
+
+        response = Response()
+
+        response.data = {
+            'message': 'User updated successfully',
+            'data': serializer.data,
+        }
+
+        return response
+
+class GymAPIView(APIView):
+
+    def get_object(self, pk):
+
+        try:
+
+            return Gym.objects.get(pk=pk)
+
+        except Gym.DoesNotExist:
+
+            raise Http404
+
+    def get(self, request, pk=None, format=None):
+
+        if pk:
+            
+            data = self.get_object(pk)
+            
+            serializer = GymSerializer(data)
+
+        else:
+
+            data = Gym.objects.all().order_by('id')
+
+            serializer = GymSerializer(data, many=True)
+
+        return Response(serializer.data)
+
+    def post(self, request, format=None):
+
+        data = request.data
+
+        serializer = GymSerializer(data=data)
+
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save()
+
+        response = Response()
+
+        response.data = {
+            'message' : 'Gym created successfully',
+            'data': serializer.data,
+        }
+
+        return response
+
+    def put(self, request, pk=None, format=None):
+
+        Gym_to_update = Gym.objects.get(pk=pk)
+
+        data = request.data
+
+        serializer = GymSerializer(instance=Gym_to_update, data=data, partial=True)
+
+        serializer.is_valid(raise_exception=True)
+
+        serializer.save()
+
+        response = Response()
+
+        response.data = {
+            'message': 'Gym updated successfully',
+            'data': serializer.data,
+        }
+
+        return response

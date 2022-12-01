@@ -5,12 +5,16 @@ from . import views
 
 urlpatterns = [
     path('user/signup/', views.CustomUserAPIView.as_view(), name="create_user"),
+    path('user/login/', jwt_views.TokenObtainPairView.as_view(), name='token_create'),  # override sjwt stock token
+    path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('usersAPI/', views.CustomUserAPIView.as_view()),
     path('usersAPI/<str:pk>/', views.CustomUserAPIView.as_view()),
     path('maxAPI/', views.MaxAPIView.as_view()),
     path('maxAPI/<str:pk>/', views.MaxAPIView.as_view()),
     path('exerciseAPI/', views.ExerciseAPIView.as_view()),
     path('exerciseAPI/<str:pk>/', views.ExerciseAPIView.as_view()),
-    path('user/login/', jwt_views.TokenObtainPairView.as_view(), name='token_create'),  # override sjwt stock token
-    path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
+    path('usergymAPI/', views.UserGymAPIView.as_view()),
+    path('usergymAPI/<str:pk>/', views.UserGymAPIView.as_view()),
+    path('gymAPI/', views.GymAPIView.as_view()),
+    path('gymAPI/<str:pk>/', views.GymAPIView.as_view()),
 ]
