@@ -28,9 +28,9 @@ class user_gym(models.Model):
 
     gym = models.ForeignKey('Gym', on_delete=models.PROTECT)
 
-    date_joined = models.DateField(null=True)
+    date_joined = models.DateField(null=True, auto_now_add=True)
 
-    date_modified = models.DateField(null=True)
+    date_modified = models.DateField(null=True, auto_now=True)
 
     active = models.BooleanField(default=True)
 
