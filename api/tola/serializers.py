@@ -152,21 +152,40 @@ class user_programSerializer(serializers.ModelSerializer):
 
             exercises=program_session_exercise.objects.filter(program_session=session.id)
 
+            exercise_list = []
+
             for exercise in exercises:
 
-                # exercise = exercise.exercise.name
+                exercise_id = exercise.exercise.id
 
-                # max_exercise = exercise.max_exercise.name
+                sets = program_session_exercise_set.objects.filter(program_session_exercise=exercise.id).order_by('set_num')
 
-                print(exercise.max_exercise.name)
+                set_list = []
 
-                # print(max_exercise)
+                for x in sets:
 
-            # sessions_list.append
+                    print(x.percent)
+
+                    set_list.append({
+                      "set_num": x.set_num,
+                      "num_of_reps": x.num_of_reps,
+                      "percent": x.percent
+                    })
+
+                exercise_list.append({
+                    "exercise": exercise.exercise.name,
+                    "sets": set_list
+                })
+
+            sessions_list.append({
+                "session": session.day,
+                "exercises": exercise_list
+            })
 
         response = {
             "program": obj.program.name,
-            "coach": coach.username
+            "coach": coach.username,
+            "sessions": sessions_list
         }
 
         return response
