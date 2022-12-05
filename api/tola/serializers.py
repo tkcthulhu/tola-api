@@ -8,21 +8,6 @@ class GymSerializer(serializers.HyperlinkedModelSerializer):
         model = Gym
         fields = ['id', 'name', 'street', 'city', 'state', 'zipcode', 'created_at']
 
-# class CustomUserLoginSerializer(serializers.ModelField):
-
-#     class Meta:
-#         model = CustomUser
-#         fields = ('email', 'username', 'password', 'first_name', 'last_name')
-#         extra_kwargs = {'password': {'write_only': True}}
-
-#     def create(self, validated_data):
-#         password = validated_data.pop('password', None)
-#         instance = self.Meta.model(**validated_data)  # as long as the fields are the same, we can just use this
-#         if password is not None:
-#             instance.set_password(password)
-#         instance.save()
-#         return instance
-
 class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
 
     gym = serializers.SerializerMethodField()
@@ -49,7 +34,6 @@ class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
     def get_gym(self, obj):
 
         id = obj.id
-
 
         if user_gym.objects.filter(user=id):
             pass
@@ -117,3 +101,73 @@ class GymSerializer(serializers.ModelSerializer):
     class Meta:
         model = Gym
         fields = ['id', 'name', 'street', 'city', 'state', 'zipcode']
+
+class ProgramSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Program
+        fields = ['id', 'name', 'coach', 'created_at', 'updated_at']
+
+class program_sessionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = program_session
+        fields = ['id', 'program', 'day']
+
+class program_session_exerciseSerilaizer(serializers.ModelSerializer):
+    class Meta:
+        model = program_session_exercise
+        fields = ['id', 'program_session', 'exercise', 'max_exercise']
+
+class program_session_exercise_setSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = program_session_exercise_set
+        fields = ['id', 'athlete', 'program_session_exercise', 'set_num', 'num_of_reps', 'percent']
+
+class user_programSerializer(serializers.ModelSerializer):
+
+    athlete = serializers.SerializerMethodField()
+
+    program = serializers.SerializerMethodField()
+
+    class Meta:
+
+        model = user_program
+
+        fields = ['id', 'athlete', 'program']
+
+    def get_athlete(self, obj):
+
+        return obj.athlete.username
+
+    def get_program(self, obj):
+
+        program_id = obj.program.id
+
+        coach = obj.program.coach
+
+        sessions = program_session.objects.filter(program = program_id)
+
+        sessions_list = []
+
+        for session in sessions:
+
+            exercises=program_session_exercise.objects.filter(program_session=session.id)
+
+            for exercise in exercises:
+
+                # exercise = exercise.exercise.name
+
+                # max_exercise = exercise.max_exercise.name
+
+                print(exercise.max_exercise.name)
+
+                # print(max_exercise)
+
+            # sessions_list.append
+
+        response = {
+            "program": obj.program.name,
+            "coach": coach.username
+        }
+
+        return response
+

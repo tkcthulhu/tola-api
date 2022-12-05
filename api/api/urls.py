@@ -20,6 +20,8 @@ from tola import views, urls
 
 router = routers.DefaultRouter()
 router.register(r'users', views.CustomUserViewSet)
+router.register(r'user_programs', views.user_programViewSet)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),

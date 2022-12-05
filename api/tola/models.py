@@ -4,8 +4,8 @@ from django.core.validators import MaxValueValidator, MinValueValidator
 
 class BaseModel(models.Model):
 
-    created_at = models.DateField(null=True)
-    updated_at = models.DateField(null=True)
+    created_at = models.DateField(null=True, auto_now_add=True)
+    updated_at = models.DateField(null=True, auto_now=True)
     active = models.BooleanField(null=False, default=True)
 
     class Meta:
@@ -87,5 +87,61 @@ class Max(BaseModel):
     def __str__(self):
         return f'{self.user} {self.exercise} {self.active}'
 
-    # class Meta:
-    #     unique_together = ('user', 'exercise', 'num_of_reps', 'active')
+class Program(BaseModel):
+
+    name = models.CharField(max_length=150)
+
+    coach = models.ForeignKey('CustomUser', on_delete=models.PROTECT)
+
+    def __str__(self):
+        return self.name
+
+class program_session(BaseModel):
+
+    program = models.ForeignKey('Program', on_delete=models.PROTECT)
+
+    day = models.IntegerField(
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(14)
+        ]
+    )
+
+    def __str__(self):
+        return f'{self.program} day:{self.day}'
+
+class program_session_exercise(BaseModel):
+
+    program_session = models.ForeignKey('program_session', on_delete=models.PROTECT)
+
+    exercise = models.ForeignKey('Exercise', on_delete=models.PROTECT, related_name='exercise')
+
+    max_exercise = models.ForeignKey('Exercise', on_delete=models.PROTECT, related_name='max_exercise')
+
+    def __str__(self):
+        return f'{self.program_session} {self.exercise}'
+
+class program_session_exercise_set(BaseModel):
+
+    program_session_exercise = models.ForeignKey('program_session_exercise', on_delete=models.PROTECT)
+
+    set_num = models.IntegerField()
+
+    num_of_reps = models.IntegerField()
+
+    percent = models.IntegerField(
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(100)
+        ]
+    )
+
+    def __str__(self):
+        return f'{self.program_session_exercise} set:{self.set_num} {self.percent}%'
+
+class user_program(BaseModel):
+
+    athlete = models.ForeignKey('CustomUser', on_delete=models.PROTECT)
+
+    program = models.ForeignKey('Program', on_delete=models.PROTECT)
+
