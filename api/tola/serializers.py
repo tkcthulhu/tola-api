@@ -6,7 +6,15 @@ class GymSerializer(serializers.HyperlinkedModelSerializer):
 
     class Meta:
         model = Gym
-        fields = ['id', 'name', 'street', 'city', 'state', 'zipcode', 'created_at']
+        fields = [
+            'id', 
+            'name', 
+            'street', 
+            'city', 
+            'state', 
+            'zipcode', 
+            'created_at'
+        ]
 
 class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
 
@@ -14,11 +22,27 @@ class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
 
     maxes = serializers.SerializerMethodField()
 
+    programs = serializers.SerializerMethodField()
+
     class Meta:
 
         model = CustomUser
 
-        fields = ['id', 'username', 'first_name', 'last_name', 'birthday', 'email', 'groups', 'is_coach', 'gym', 'maxes', 'password', 'weight']
+        fields = [
+            'id', 
+            'username', 
+            'first_name', 
+            'last_name', 
+            'birthday', 
+            'email', 
+            'groups', 
+            'is_coach', 
+            'gym', 
+            'maxes', 
+            'password', 
+            'weight', 
+            'programs'
+        ]
 
         extra_kwargs = {'password': {'write_only': True}}
 
@@ -82,10 +106,27 @@ class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
 
         return maxes
 
+    def get_programs(self, obj):
+
+        program = user_program.objects.get(athlete=obj.id, active=True)
+            
+        return {
+            "id": program.id,
+            "name": program.program.name
+        }
+
 class MaxSerializer(serializers.ModelSerializer):
     class Meta:
         model = Max
-        fields = ['id', 'user', 'exercise', 'weight', 'num_of_reps', 'active', 'created_at']
+        fields = [
+            'id', 
+            'user', 
+            'exercise', 
+            'weight', 
+            'num_of_reps', 
+            'active', 
+            'created_at'
+        ]
 
 class ExerciseSerializer(serializers.ModelSerializer):
     class Meta:
@@ -110,7 +151,7 @@ class ProgramSerializer(serializers.ModelSerializer):
 class program_sessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = program_session
-        fields = ['id', 'program', 'day']
+        fields = ['id', 'program', 'session']
 
 class program_session_exerciseSerilaizer(serializers.ModelSerializer):
     class Meta:
@@ -136,7 +177,10 @@ class user_programSerializer(serializers.ModelSerializer):
 
     def get_athlete(self, obj):
 
-        return obj.athlete.username
+        return {
+            "id": obj.athlete.id,
+            "username": obj.athlete.username,
+        }
 
     def get_program(self, obj):
 
@@ -144,13 +188,13 @@ class user_programSerializer(serializers.ModelSerializer):
 
         coach = obj.program.coach
 
-        sessions = program_session.objects.filter(program = program_id)
+        sessions = program_session.objects.filter(program = program_id).order_by('session', 'week')
 
         sessions_list = []
 
         for session in sessions:
 
-            exercises=program_session_exercise.objects.filter(program_session=session.id)
+            exercises=program_session_exercise.objects.filter(program_session=session.id).order_by('order')
 
             exercise_list = []
 
@@ -158,18 +202,19 @@ class user_programSerializer(serializers.ModelSerializer):
 
                 exercise_id = exercise.exercise.id
 
+                max = Max.objects.get(user=obj.athlete.id, exercise=exercise.max_exercise.id, active=True)
+
                 sets = program_session_exercise_set.objects.filter(program_session_exercise=exercise.id).order_by('set_num')
 
                 set_list = []
 
                 for x in sets:
 
-                    print(x.percent)
-
                     set_list.append({
-                      "set_num": x.set_num,
-                      "num_of_reps": x.num_of_reps,
-                      "percent": x.percent
+                        "set_num": x.set_num,
+                        "num_of_reps": x.num_of_reps,
+                        "percent": x.percent,
+                        "weight": (max.weight * x.percent) * .01
                     })
 
                 exercise_list.append({
@@ -178,7 +223,8 @@ class user_programSerializer(serializers.ModelSerializer):
                 })
 
             sessions_list.append({
-                "session": session.day,
+                "week": session.week,
+                "session": session.session,
                 "exercises": exercise_list
             })
 

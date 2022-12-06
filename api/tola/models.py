@@ -100,19 +100,32 @@ class program_session(BaseModel):
 
     program = models.ForeignKey('Program', on_delete=models.PROTECT)
 
-    day = models.IntegerField(
+    week = models.IntegerField(
         validators=[
             MinValueValidator(1),
-            MaxValueValidator(14)
+            MaxValueValidator(52)
+        ]
+    )
+
+    session = models.IntegerField(
+        validators=[
+            MinValueValidator(1),
+            MaxValueValidator(300)
         ]
     )
 
     def __str__(self):
-        return f'{self.program} day:{self.day}'
+        return f'{self.program} session:{self.session}'
 
 class program_session_exercise(BaseModel):
 
     program_session = models.ForeignKey('program_session', on_delete=models.PROTECT)
+
+    order = models.IntegerField(
+        validators=[
+            MinValueValidator(1)
+        ]
+    )
 
     exercise = models.ForeignKey('Exercise', on_delete=models.PROTECT, related_name='exercise')
 
@@ -144,4 +157,7 @@ class user_program(BaseModel):
     athlete = models.ForeignKey('CustomUser', on_delete=models.PROTECT)
 
     program = models.ForeignKey('Program', on_delete=models.PROTECT)
+
+    class Meta:
+        unique_together = ('athlete', 'program', 'active')
 
