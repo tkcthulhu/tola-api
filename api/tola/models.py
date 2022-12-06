@@ -161,3 +161,15 @@ class user_program(BaseModel):
     class Meta:
         unique_together = ('athlete', 'program', 'active')
 
+class SetStatus(models.Model):
+
+    status = models.CharField(max_length=15)
+
+class user_set(BaseModel):
+
+    athlete = models.ForeignKey('CustomUser', on_delete=models.PROTECT)
+
+    session_set = models.ForeignKey('program_session_exercise_set', on_delete=models.PROTECT)
+
+    status = models.ForeignKey('SetStatus', on_delete=models.PROTECT)
+
