@@ -6,7 +6,7 @@ from . import views
 
 router = routers.DefaultRouter()
 
-router.register(r'user_gym_view_set', views.UserGymViewSet)
+# router.register(r'user_program_view_set', views.user_programViewSet)
 
 urlpatterns = [
     path('user/signup/', views.CustomUserAPIView.as_view(), name="create_user"),

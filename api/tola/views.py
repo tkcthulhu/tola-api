@@ -15,9 +15,9 @@ class CustomUserViewSet(viewsets.ModelViewSet):
     serializer_class = CustomUserSerializer
     permission_classes = [permissions.AllowAny]
 
-class UserGymViewSet(viewsets.ModelViewSet):
-    queryset = user_gym.objects.all().order_by('id')
-    serializer_class = UserGymSerializer
+class user_programViewSet(viewsets.ModelViewSet):
+    queryset = user_program.objects.all().order_by('id')
+    serializer_class = user_programSerializer
     permission_classes = [permissions.AllowAny]
 
 class CustomUserAPIView(APIView):
