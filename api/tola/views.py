@@ -3,6 +3,7 @@ from rest_framework import viewsets, permissions
 from django.http.response import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from tola.models import *
 from .serializers import *
 
@@ -359,3 +360,16 @@ class GymAPIView(APIView):
         }
 
         return response
+
+@api_view([ 'POST', ])
+def addUserToProgram(request, program_id):
+    print(request)
+    user = CustomUser.objects.get(id = request.user.id)
+    program = user_program.objects.get(program = program_id)
+
+    if request.method == "POST":
+        print(user, program)
+
+    ProgramSerializer = ProgramSerializer()
+
+    return Response(ProgramSerializer.data)

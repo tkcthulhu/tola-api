@@ -108,12 +108,19 @@ class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_programs(self, obj):
 
-        program = user_program.objects.get(athlete=obj.id, active=True)
+        this_user_program = user_program.objects.filter(athlete=obj.id)
+
+        if this_user_program:
             
-        return {
-            "id": program.id,
-            "name": program.program.name
-        }
+            program = user_program.objects.get(athlete=obj.id, active=True)
+
+            return {
+                "id": program.id,
+                "name": program.program.name
+            }
+        
+        else:
+            return []
 
 class MaxSerializer(serializers.ModelSerializer):
     class Meta:
@@ -204,6 +211,9 @@ class user_programSerializer(serializers.ModelSerializer):
 
                 max = Max.objects.get(user=obj.athlete.id, exercise=exercise.max_exercise.id, active=True)
 
+                if not max:
+                    set_list = 'Please log a max in this exercise to continue'
+
                 sets = program_session_exercise_set.objects.filter(program_session_exercise=exercise.id).order_by('set_num')
 
                 set_list = []
@@ -236,4 +246,7 @@ class user_programSerializer(serializers.ModelSerializer):
 
         return response
 
-
+class user_setSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = user_set
+        fields = ['id', 'athlete', 'session_set', 'status']
