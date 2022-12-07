@@ -199,6 +199,8 @@ class user_programSerializer(serializers.ModelSerializer):
 
         sessions_list = []
 
+        set_progress = []
+
         for session in sessions:
 
             exercises=program_session_exercise.objects.filter(program_session=session.id).order_by('order')
@@ -220,11 +222,18 @@ class user_programSerializer(serializers.ModelSerializer):
 
                 for x in sets:
 
+                    set_status=user_set.objects.get(session_set=x.id)
+
                     set_list.append({
                         "set_num": x.set_num,
                         "num_of_reps": x.num_of_reps,
                         "percent": x.percent,
-                        "weight": (max.weight * x.percent) * .01
+                        "weight": round((max.weight * x.percent) * .01),
+                        "set_status": {
+                            "id": set_status.id,
+                            "status": set_status.status.status,
+                            "active": set_status.active
+                        }
                     })
 
                 exercise_list.append({
@@ -241,7 +250,7 @@ class user_programSerializer(serializers.ModelSerializer):
         response = {
             "program": obj.program.name,
             "coach": coach.username,
-            "sessions": sessions_list
+            "sessions": sessions_list,
         }
 
         return response
@@ -249,4 +258,4 @@ class user_programSerializer(serializers.ModelSerializer):
 class user_setSerializer(serializers.ModelSerializer):
     class Meta:
         model = user_set
-        fields = ['id', 'athlete', 'session_set', 'status']
+        fields = ['id', 'athlete', 'session_set', 'status', 'active', 'updated_at']
