@@ -26,6 +26,11 @@ class user_setViewSet(viewsets.ModelViewSet):
     serializer_class = user_setSerializer
     permission_classes = [permissions.AllowAny]
 
+class ProgramViewSet(viewsets.ModelViewSet):
+    queryset = Program.objects.all()
+    serializer_class = ProgramSerializer
+    permission_classes = [permissions.AllowAny]
+
 class CustomUserAPIView(APIView):
 
     def get_object(self, pk):
@@ -378,9 +383,21 @@ def addUserToProgram(request, program_id):
 
         try:
 
-            up = user_program.objects.get(athlete=user.id, program=program.id)
+            this_user_program = user_program.objects.get(athlete=user.id, program=program.id)
 
-            return Response('user is already a part of this program')
+            current_programs = user_program.objects.filter(athlete=user.id)
+
+            for program in current_programs:
+
+                program.active = False
+
+                program.save()
+
+            this_user_program.active = True
+
+            this_user_program.save()
+
+            return Response('This program is activated')
 
         except user_program.DoesNotExist:
 

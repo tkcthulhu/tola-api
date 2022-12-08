@@ -22,6 +22,7 @@ router = routers.DefaultRouter()
 router.register(r'users', views.CustomUserViewSet)
 router.register(r'user_programs', views.user_programViewSet)
 router.register(r'user_set', views.user_setViewSet)
+router.register(r'programs', views.ProgramViewSet)
 
 
 urlpatterns = [

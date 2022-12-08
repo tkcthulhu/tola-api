@@ -225,7 +225,7 @@ class user_programSerializer(serializers.ModelSerializer):
 
                 for x in sets:
 
-                    set_status=user_set.objects.get(session_set=x.id)
+                    set_status=user_set.objects.get(session_set=x.id, athlete=obj.athlete.id)
 
                     set_list.append({
                         "set_num": x.set_num,
