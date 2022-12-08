@@ -114,8 +114,11 @@ class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
             
             program = user_program.objects.get(athlete=obj.id, active=True)
 
+            program_id = program.program.id
+
             return {
                 "id": program.id,
+                "program_id": program_id, 
                 "name": program.program.name
             }
         
@@ -222,7 +225,7 @@ class user_programSerializer(serializers.ModelSerializer):
 
                 for x in sets:
 
-                    set_status=user_set.objects.get(session_set=x.id)
+                    set_status=user_set.objects.get(session_set=x.id, athlete=obj.athlete.id)
 
                     set_list.append({
                         "set_num": x.set_num,

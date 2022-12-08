@@ -26,6 +26,11 @@ class user_setViewSet(viewsets.ModelViewSet):
     serializer_class = user_setSerializer
     permission_classes = [permissions.AllowAny]
 
+class ProgramViewSet(viewsets.ModelViewSet):
+    queryset = Program.objects.all()
+    serializer_class = ProgramSerializer
+    permission_classes = [permissions.AllowAny]
+
 class CustomUserAPIView(APIView):
 
     def get_object(self, pk):
@@ -374,11 +379,25 @@ def addUserToProgram(request, program_id):
 
     if request.method == "POST":
 
-        post = "post succesful"
+        post = "post "
 
         try:
-            up = user_program.objects.get(athlete=user.id, program=program.id)
-            return Response('user is already a part of this program')
+
+            this_user_program = user_program.objects.get(athlete=user.id, program=program.id)
+
+            current_programs = user_program.objects.filter(athlete=user.id)
+
+            for program in current_programs:
+
+                program.active = False
+
+                program.save()
+
+            this_user_program.active = True
+
+            this_user_program.save()
+
+            return Response('This program is activated')
 
         except user_program.DoesNotExist:
 
@@ -412,3 +431,30 @@ def addUserToProgram(request, program_id):
 
         return Response(post)
 
+@api_view(['PATCH', 'DELETE'])
+def updateUserProgram(request, program_id):
+
+    user = CustomUser.objects.get(id = request.user.id)
+    program = Program.objects.get(id = program_id)
+
+    if request.method == 'PATCH':
+
+        sessions = program_session.objects.filter(program=program_id)
+
+        for session in sessions:
+
+            exercises = program_session_exercise.objects.filter(program_session=session.id)
+
+            for exercise in exercises:
+
+                sets = program_session_exercise_set.objects.filter(program_session_exercise=exercise.id).order_by('id')
+
+                for x in sets:
+
+                    this_set = user_set.objects.get(session_set=x.id, athlete=user.id)
+
+                    this_set.status = SetStatus.objects.get(id=1)
+
+                    this_set.save()
+
+    return Response('Successful')
