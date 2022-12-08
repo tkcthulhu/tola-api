@@ -457,4 +457,12 @@ def updateUserProgram(request, program_id):
 
                     this_set.save()
 
+    if request.method == 'DELETE':
+
+        userProgram = user_program.objects.get(athlete=user.id, program=program.id)
+
+        userProgram.active = False
+
+        userProgram.save()
+
     return Response('Successful')
