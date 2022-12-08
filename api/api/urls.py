@@ -14,8 +14,20 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
+from rest_framework import routers
+from tola import views, urls
+
+router = routers.DefaultRouter()
+router.register(r'users', views.CustomUserViewSet)
+router.register(r'user_programs', views.user_programViewSet)
+router.register(r'user_set', views.user_setViewSet)
+router.register(r'programs', views.ProgramViewSet)
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include(router.urls)),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path('api/', include(urls))
 ]
