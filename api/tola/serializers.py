@@ -108,12 +108,19 @@ class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_programs(self, obj):
 
-        program = user_program.objects.get(athlete=obj.id, active=True)
+        this_user_program = user_program.objects.filter(athlete=obj.id)
+
+        if this_user_program:
             
-        return {
-            "id": program.id,
-            "name": program.program.name
-        }
+            program = user_program.objects.get(athlete=obj.id, active=True)
+
+            return {
+                "id": program.id,
+                "name": program.program.name
+            }
+        
+        else:
+            return []
 
 class MaxSerializer(serializers.ModelSerializer):
     class Meta:
@@ -192,6 +199,8 @@ class user_programSerializer(serializers.ModelSerializer):
 
         sessions_list = []
 
+        set_progress = []
+
         for session in sessions:
 
             exercises=program_session_exercise.objects.filter(program_session=session.id).order_by('order')
@@ -204,17 +213,27 @@ class user_programSerializer(serializers.ModelSerializer):
 
                 max = Max.objects.get(user=obj.athlete.id, exercise=exercise.max_exercise.id, active=True)
 
+                if not max:
+                    set_list = 'Please log a max in this exercise to continue'
+
                 sets = program_session_exercise_set.objects.filter(program_session_exercise=exercise.id).order_by('set_num')
 
                 set_list = []
 
                 for x in sets:
 
+                    set_status=user_set.objects.get(session_set=x.id)
+
                     set_list.append({
                         "set_num": x.set_num,
                         "num_of_reps": x.num_of_reps,
                         "percent": x.percent,
-                        "weight": (max.weight * x.percent) * .01
+                        "weight": round((max.weight * x.percent) * .01),
+                        "set_status": {
+                            "id": set_status.id,
+                            "status": set_status.status.status,
+                            "active": set_status.active
+                        }
                     })
 
                 exercise_list.append({
@@ -231,8 +250,12 @@ class user_programSerializer(serializers.ModelSerializer):
         response = {
             "program": obj.program.name,
             "coach": coach.username,
-            "sessions": sessions_list
+            "sessions": sessions_list,
         }
 
         return response
 
+class user_setSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = user_set
+        fields = ['id', 'athlete', 'session_set', 'status', 'active', 'updated_at']

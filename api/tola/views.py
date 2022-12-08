@@ -3,6 +3,7 @@ from rest_framework import viewsets, permissions
 from django.http.response import Http404
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 from tola.models import *
 from .serializers import *
 
@@ -18,6 +19,11 @@ class CustomUserViewSet(viewsets.ModelViewSet):
 class user_programViewSet(viewsets.ModelViewSet):
     queryset = user_program.objects.all().order_by('id')
     serializer_class = user_programSerializer
+    permission_classes = [permissions.AllowAny]
+
+class user_setViewSet(viewsets.ModelViewSet):
+    queryset = user_set.objects.all().order_by('athlete', 'id')
+    serializer_class = user_setSerializer
     permission_classes = [permissions.AllowAny]
 
 class CustomUserAPIView(APIView):
@@ -359,3 +365,49 @@ class GymAPIView(APIView):
         }
 
         return response
+
+@api_view([ 'POST', 'GET'])
+def addUserToProgram(request, program_id):
+    print(request)
+    user = CustomUser.objects.get(id = request.user.id)
+    program = Program.objects.get(id = program_id)
+
+    if request.method == "POST":
+
+        post = "post succesful"
+
+        try:
+            up = user_program.objects.get(athlete=user.id, program=program.id)
+            return Response('user is already a part of this program')
+
+        except user_program.DoesNotExist:
+
+            user_program.objects.create(athlete=user, program=program)
+
+            sessions = program_session.objects.filter(program=program_id)
+
+            for session in sessions:
+
+                exercises = program_session_exercise.objects.filter(program_session=session.id)
+
+                for exercise in exercises:
+
+                    sets = program_session_exercise_set.objects.filter(program_session_exercise=exercise.id).order_by('id')
+
+                    for x in sets:
+
+                        this_set = x.id
+
+                        data = {
+                            'athlete': user.id,
+                            'session_set': this_set,
+                            'status': 1,
+                        }
+
+                        serializer = user_setSerializer(data=data)
+
+                        serializer.is_valid(raise_exception=True)
+
+                        serializer.save()
+
+        return Response(post)

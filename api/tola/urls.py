@@ -22,4 +22,5 @@ urlpatterns = [
     path('usergymAPI/<str:pk>/', views.UserGymAPIView.as_view()),
     path('gymAPI/', views.GymAPIView.as_view()),
     path('gymAPI/<str:pk>/', views.GymAPIView.as_view()),
+    path('addUserToProgram/<int:program_id>/', views.addUserToProgram),
 ]
