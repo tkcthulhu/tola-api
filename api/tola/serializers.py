@@ -114,8 +114,11 @@ class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
             
             program = user_program.objects.get(athlete=obj.id, active=True)
 
+            program_id = program.program.id
+
             return {
                 "id": program.id,
+                "program_id": program_id, 
                 "name": program.program.name
             }
         
