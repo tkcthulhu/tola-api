@@ -368,7 +368,7 @@ class GymAPIView(APIView):
 
 @api_view([ 'POST', 'GET'])
 def addUserToProgram(request, program_id):
-    print(request)
+
     user = CustomUser.objects.get(id = request.user.id)
     program = Program.objects.get(id = program_id)
 
@@ -411,3 +411,4 @@ def addUserToProgram(request, program_id):
                         serializer.save()
 
         return Response(post)
+
