@@ -61,11 +61,27 @@ if APPENGINE_URL:
     if not urlparse(APPENGINE_URL).scheme:
         APPENGINE_URL = f"https://{APPENGINE_URL}"
 
-    ALLOWED_HOSTS = ["*"]
+    ALLOWED_HOSTS = [urlparse(APPENGINE_URL).netloc, "*.gitpod.io"]
     CSRF_TRUSTED_ORIGINS = [APPENGINE_URL]
+    CORS_ALLOWED_ORIGIN_REGEXES = [
+        r"^https://.*\.gitpod\.io$",
+    ]
     SECURE_SSL_REDIRECT = True
 else:
     ALLOWED_HOSTS = ['*']
+    CSRF_TRUSTED_ORIGINS = ['http://localhost']
+    CORS_ALLOW_ALL_ORIGINS = True
+
+
+# CSRF_TRUSTED_ORIGINS = [
+#     'https://*.gitpod.io',
+#     'https://*.appspot.com',
+# ]
+
+CORS_ALLOWED_ORIGIN_REGEXES = [
+    r"^https://.*\.gitpod\.io$",
+    r"^https://.*\.web\.app$",
+]
 
 AUTH_USER_MODEL = 'tola.CustomUser'
 
@@ -185,16 +201,6 @@ SIMPLE_JWT = {
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-CSRF_TRUSTED_ORIGINS = [
-    'https://*.gitpod.io',
-    'https://*.appspot.com',
-]
-
-CORS_ALLOWED_ORIGIN_REGEXES = [
-    r"^https://.*\.gitpod\.io$",
-    r"^https://.*\.web\.app$",
-]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
