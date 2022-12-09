@@ -40,6 +40,7 @@ class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
             'gym', 
             'maxes', 
             'password', 
+            'units',
             'weight', 
             'programs'
         ]
@@ -183,7 +184,7 @@ class user_programSerializer(serializers.ModelSerializer):
 
         model = user_program
 
-        fields = ['id', 'athlete', 'program']
+        fields = ['id', 'active', 'athlete', 'program']
 
     def get_athlete(self, obj):
 
