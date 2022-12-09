@@ -40,6 +40,7 @@ class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
             'gym', 
             'maxes', 
             'password', 
+            'units',
             'weight', 
             'programs'
         ]
@@ -108,9 +109,9 @@ class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
 
     def get_programs(self, obj):
 
-        this_user_program = user_program.objects.filter(athlete=obj.id)
-
-        if this_user_program:
+        try: 
+            
+            user_program.objects.filter(athlete=obj.id)
             
             program = user_program.objects.get(athlete=obj.id, active=True)
 
@@ -122,7 +123,7 @@ class CustomUserSerializer(serializers.HyperlinkedModelSerializer):
                 "name": program.program.name
             }
         
-        else:
+        except user_program.DoesNotExist:
             return []
 
 class MaxSerializer(serializers.ModelSerializer):
@@ -183,7 +184,7 @@ class user_programSerializer(serializers.ModelSerializer):
 
         model = user_program
 
-        fields = ['id', 'athlete', 'program']
+        fields = ['id', 'active', 'athlete', 'program']
 
     def get_athlete(self, obj):
 

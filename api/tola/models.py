@@ -14,6 +14,8 @@ class BaseModel(models.Model):
 class CustomUser(AbstractUser):
 
     weight = models.FloatField(null=False, default=0)
+
+    units = models.BooleanField(default=False)
     
     birthday = models.DateField(null=False, default='1990-11-11')
 
