@@ -425,7 +425,7 @@ def addUserToProgram(request, program_id):
 
                         this_set = x.id
 
-                        user_set.objects.create(athlete=user.id, session_set=this_set, status=1)
+                        user_set.objects.create(athlete=user, session_set=this_set, status=1)
 
                         # data = {
                         #     'athlete': user.id,
