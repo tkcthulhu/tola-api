@@ -376,13 +376,13 @@ def addUserToProgram(request, program_id):
 
     user = CustomUser.objects.get(id=request.user.id)
     program = Program.objects.get(id=program_id)
-    print(program)
 
     if request.method == "POST":
 
         post = "post "
 
         try:
+            print(program)
 
             this_user_program = user_program.objects.get(athlete=user, program=program)
 
