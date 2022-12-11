@@ -215,10 +215,16 @@ class user_programSerializer(serializers.ModelSerializer):
 
                 exercise_id = exercise.exercise.id
 
-                max = Max.objects.get(user=obj.athlete.id, exercise=exercise.max_exercise.id, active=True)
+                try: 
+                    Max.objects.get(user=obj.athlete.id, exercise=exercise.max_exercise.id, active=True)
 
-                if not max:
-                    set_list = 'Please log a max in this exercise to continue'
+                    max = Max.objects.get(user=obj.athlete.id, exercise=exercise.max_exercise.id, active=True)
+
+                except:
+
+                    set_list = [f'Please log a max in {exercise.max_exercise.name} to train.']
+
+                    continue
 
                 sets = program_session_exercise_set.objects.filter(program_session_exercise=exercise.id).order_by('set_num')
 
