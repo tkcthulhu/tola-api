@@ -382,7 +382,6 @@ def addUserToProgram(request, program_id):
         post = "post "
 
         try:
-            print(program)
 
             this_user_program = user_program.objects.get(athlete=user, program=program)
 
@@ -415,6 +414,8 @@ def addUserToProgram(request, program_id):
             except:
 
                 pass
+
+            print(program)
 
             user_program.objects.create(athlete=user, program=program)
 
