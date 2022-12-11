@@ -401,6 +401,20 @@ def addUserToProgram(request, program_id):
 
         except user_program.DoesNotExist:
 
+            try:
+
+                current_programs = user_program.objects.filter(athlete=user.id)
+
+                for program in current_programs:
+
+                    program.active = False
+
+                    program.save()
+
+            except:
+
+                pass
+
             user_program.objects.create(athlete=user, program=program)
 
             sessions = program_session.objects.filter(program=program_id)
