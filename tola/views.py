@@ -415,7 +415,9 @@ def addUserToProgram(request, program_id):
 
                     for x in sets:
 
-                        user_set.objects.create(athlete=user, session_set=x, status=1)
+                        start_status = SetStatus.objects.get(id=1)
+
+                        user_set.objects.create(athlete=user, session_set=x, status=start_status)
 
 
         return Response(post)
