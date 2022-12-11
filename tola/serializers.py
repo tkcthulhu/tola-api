@@ -242,7 +242,10 @@ class user_programSerializer(serializers.ModelSerializer):
 
                 except:
 
-                    set_list = f'Please log a max in {exercise.max_exercise.name} to train.'
+                    exercise_list.append({
+                        "exercise": exercise.exercise.name,
+                        "sets": f'Please log a max in {exercise.max_exercise.name} to train.'
+                    })
 
                     continue
 
