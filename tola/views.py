@@ -425,17 +425,19 @@ def addUserToProgram(request, program_id):
 
                         this_set = x.id
 
-                        data = {
-                            'athlete': user.id,
-                            'session_set': this_set,
-                            'status': 1,
-                        }
+                        user_set.objects.create(athlete=user.id, session_set=this_set, status=1)
 
-                        serializer = user_setSerializer(data=data)
+                        # data = {
+                        #     'athlete': user.id,
+                        #     'session_set': this_set,
+                        #     'status': 1,
+                        # }
 
-                        serializer.is_valid(raise_exception=True)
+                        # serializer = user_setSerializer(data=data)
 
-                        serializer.save()
+                        # serializer.is_valid(raise_exception=True)
+
+                        # serializer.save()
 
         return Response(post)
 
