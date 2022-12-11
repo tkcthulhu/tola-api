@@ -415,9 +415,7 @@ def addUserToProgram(request, program_id):
 
                 pass
 
-            print(program)
-
-            user_program.objects.create(athlete=user, program=program)
+            user_program.objects.create(athlete=user, program=Program.objects.get(id=program_id))
 
             sessions = program_session.objects.filter(program=program_id)
 
