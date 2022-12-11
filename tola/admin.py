@@ -11,5 +11,6 @@ admin.site.register(user_program)
 admin.site.register(program_session)
 admin.site.register(program_session_exercise)
 admin.site.register(program_session_exercise_set)
+admin.site.register(user_set)
 
 # Register your models here.
