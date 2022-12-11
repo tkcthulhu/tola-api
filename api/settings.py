@@ -72,7 +72,7 @@ if APPENGINE_URL:
         r"^https://.*\.gitpod\.io$",
         r"^https://.*\.web\.app$",
     ]
-    
+
     SECURE_SSL_REDIRECT = True
 else:
     ALLOWED_HOSTS = ['*']
@@ -107,7 +107,6 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
-X_FRAME_OPTIONS = "SAMEORIGIN"
 SILENCED_SYSTEM_CHECKS = ["security.W019"]
 
 MIDDLEWARE = [
