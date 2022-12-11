@@ -405,15 +405,23 @@ def addUserToProgram(request, program_id):
 
             sessions = program_session.objects.filter(program=program_id)
 
+            print(sessions)
+
             for session in sessions:
+
+                print(session)
 
                 exercises = program_session_exercise.objects.filter(program_session=session.id)
 
                 for exercise in exercises:
 
+                    print(exercise)
+
                     sets = program_session_exercise_set.objects.filter(program_session_exercise=exercise.id).order_by('id')
 
                     for x in sets:
+
+                        print(x)
 
                         this_set = x.id
 
