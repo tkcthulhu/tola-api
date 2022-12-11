@@ -383,7 +383,7 @@ def addUserToProgram(request, program_id):
 
         try:
 
-            this_user_program = user_program.objects.get(athlete=user.id, program=program.id)
+            this_user_program = user_program.objects.get(athlete=user, program=program)
 
             current_programs = user_program.objects.filter(athlete=user.id)
 
