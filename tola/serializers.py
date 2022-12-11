@@ -220,31 +220,31 @@ class user_programSerializer(serializers.ModelSerializer):
 
                     max = Max.objects.get(user=obj.athlete.id, exercise=exercise.max_exercise.id, active=True)
 
+                    sets = program_session_exercise_set.objects.filter(program_session_exercise=exercise.id).order_by('set_num')
+
+                    set_list = []
+
+                    for x in sets:
+
+                        set_status=user_set.objects.get(session_set=x.id, athlete=obj.athlete.id)
+
+                        set_list.append({
+                            "set_num": x.set_num,
+                            "num_of_reps": x.num_of_reps,
+                            "percent": x.percent,
+                            "weight": round((max.weight * x.percent) * .01),
+                            "set_status": {
+                                "id": set_status.id,
+                                "status": set_status.status.status,
+                                "active": set_status.active
+                            }
+                        })
+
                 except:
 
-                    set_list = [f'Please log a max in {exercise.max_exercise.name} to train.']
+                    set_list = f'Please log a max in {exercise.max_exercise.name} to train.'
 
                     continue
-
-                sets = program_session_exercise_set.objects.filter(program_session_exercise=exercise.id).order_by('set_num')
-
-                set_list = []
-
-                for x in sets:
-
-                    set_status=user_set.objects.get(session_set=x.id, athlete=obj.athlete.id)
-
-                    set_list.append({
-                        "set_num": x.set_num,
-                        "num_of_reps": x.num_of_reps,
-                        "percent": x.percent,
-                        "weight": round((max.weight * x.percent) * .01),
-                        "set_status": {
-                            "id": set_status.id,
-                            "status": set_status.status.status,
-                            "active": set_status.active
-                        }
-                    })
 
                 exercise_list.append({
                     "exercise": exercise.exercise.name,
