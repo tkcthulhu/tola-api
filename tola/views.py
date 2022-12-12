@@ -461,7 +461,7 @@ def updateUserProgram(request, program_id):
                     this_set.status = SetStatus.objects.get(id=1)
 
                     this_set.save()
-        return Response('Program has been reseet')
+        return Response('Program has been reset')
 
     if request.method == 'DELETE':
 

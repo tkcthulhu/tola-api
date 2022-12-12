@@ -1,6 +1,8 @@
 from django.urls import path, include
 from rest_framework_simplejwt import views as jwt_views
 from rest_framework import routers
+from rest_framework.decorators import permission_classes, authentication_classes
+from rest_framework.permissions import AllowAny
 
 from . import views
 
@@ -9,7 +11,7 @@ router = routers.DefaultRouter()
 # router.register(r'user_program_view_set', views.user_programViewSet)
 
 urlpatterns = [
-    path('user/signup/', views.CustomUserAPIView.as_view(), name="create_user"),
+    path('user/signup/', authentication_classes([])(permission_classes([AllowAny])(views.CustomUserAPIView.as_view())), name="create_user"),
     path('user/login/', jwt_views.TokenObtainPairView.as_view(), name='token_create'),  # override sjwt stock token
     path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('usersAPI/', views.CustomUserAPIView.as_view()),
