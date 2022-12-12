@@ -379,7 +379,7 @@ def addUserToProgram(request, program_id):
 
     if request.method == "POST":
 
-        post = "post "
+        post = "Program joined successfully"
 
         try:
 
@@ -397,7 +397,7 @@ def addUserToProgram(request, program_id):
 
             this_user_program.save()
 
-            return Response('This program is activated')
+            return Response('Program has been rejoined')
 
         except user_program.DoesNotExist:
 
@@ -461,6 +461,7 @@ def updateUserProgram(request, program_id):
                     this_set.status = SetStatus.objects.get(id=1)
 
                     this_set.save()
+        return Response('Program has been reseet')
 
     if request.method == 'DELETE':
 
@@ -470,4 +471,4 @@ def updateUserProgram(request, program_id):
 
         userProgram.save()
 
-    return Response('Successful')
+        return Response('You have left this program')

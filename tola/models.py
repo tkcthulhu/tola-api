@@ -13,7 +13,7 @@ class BaseModel(models.Model):
 
 class CustomUser(AbstractUser):
 
-    weight = models.FloatField(null=False, default=0)
+    weight = models.FloatField(null=False, default=0, validators=MinValueValidator(0))
 
     units = models.BooleanField(default=False)
     
