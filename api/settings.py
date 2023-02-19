@@ -73,11 +73,13 @@ if APPENGINE_URL:
         r"^https://.*\.web\.app$",
     ]
 
+    CORS_ALLOW_ALL_ORIGINS = DEBUG
+
     SECURE_SSL_REDIRECT = True
 else:
     ALLOWED_HOSTS = ['*']
-    CSRF_TRUSTED_ORIGINS = ['http://localhost']
-    CORS_ALLOW_ALL_ORIGINS = True
+    CSRF_TRUSTED_ORIGINS = ['https://localhost']
+    CORS_ALLOW_ALL_ORIGINS = DEBUG
 
 
 CSRF_TRUSTED_ORIGINS = [
@@ -89,6 +91,8 @@ CORS_ALLOWED_ORIGIN_REGEXES = [
     r"^https://.*\.gitpod\.io$",
     r"^https://.*\.web\.app$",
 ]
+
+CORS_ALLOW_ALL_ORIGINS = DEBUG
 
 AUTH_USER_MODEL = 'tola.CustomUser'
 
@@ -107,6 +111,7 @@ INSTALLED_APPS = [
     'corsheaders',
 ]
 
+X_FRAME_OPTIONS = "SAMEORIGIN"
 SILENCED_SYSTEM_CHECKS = ["security.W019"]
 
 MIDDLEWARE = [
@@ -190,7 +195,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60000),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=14),
     'ROTATE_REFRESH_TOKENS': True,
     'BLACKLIST_AFTER_ROTATION': False,
