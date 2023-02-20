@@ -168,6 +168,9 @@ class ProgramSerializer(serializers.ModelSerializer):
 
         program_id = obj.id
 
+        sessions = program_session.objects.filter(program = program_id).order_by('session', 'week')
+
+        return sessions
         
 
 class program_sessionSerializer(serializers.ModelSerializer):
