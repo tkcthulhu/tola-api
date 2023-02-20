@@ -155,9 +155,20 @@ class GymSerializer(serializers.ModelSerializer):
         fields = ['id', 'name', 'street', 'city', 'state', 'zipcode']
 
 class ProgramSerializer(serializers.ModelSerializer):
+
+    sessions = serializers.SerializerMethodField()
+
     class Meta:
+
         model = Program
-        fields = ['id', 'name', 'coach', 'created_at', 'updated_at']
+
+        fields = ['id', 'name', 'coach', 'sessions', 'created_at', 'updated_at']
+
+    def get_sessions(self, obj):
+
+        program_id = obj.id
+
+        
 
 class program_sessionSerializer(serializers.ModelSerializer):
     class Meta:
