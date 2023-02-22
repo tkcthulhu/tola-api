@@ -142,7 +142,7 @@ class program_session_exercise_set(BaseModel):
 
     set_num = models.IntegerField()
 
-    num_of_reps = models.CharField(max_length=6)
+    num_of_reps = models.CharField(max_length=100)
 
     percent = models.IntegerField(
         validators=[
