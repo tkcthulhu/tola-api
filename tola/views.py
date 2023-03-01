@@ -472,3 +472,51 @@ def updateUserProgram(request, program_id):
         userProgram.save()
 
         return Response('You have left this program')
+
+@api_view(['POST'])
+def addNewSession(request, program_id):
+
+    p = program_session.objects.create(
+        program=Program.objects.get(id=program_id), 
+        week=request.data['week'], 
+        session=request.data['session']
+        )
+    
+    p.save()
+
+    exercises = request.data['exercises']
+
+    for exercise in exercises:
+
+        e = program_session_exercise.objects.create(
+            program_session=program_session.objects.get(id=p.id), 
+            order=int(exercise['order']), 
+            exercise=Exercise.objects.get(id=int(exercise['id'])), 
+            max_exercise=Exercise.objects.get(id=int(exercise['max_exercise']))
+            )
+
+        e.save()
+
+        sets = exercise['sets']
+
+        for x in sets:
+
+            s = program_session_exercise_set.objects.create(
+                program_session_exercise=program_session_exercise.objects.get(id=e.id),
+                set_num=int(x['set_num']),
+                num_of_reps=int(x['num_of_reps']),
+                percent=int(x['percent'])
+            )
+
+            s.save()
+
+    return Response('Cheese')
+
+@api_view(['GET'])
+def getProgramSessions(request, program_id):
+
+    data = program_sessions.objects.get(program = program_id).order_by('session')
+
+    serializer = program_sessionSerializer(data, many=True)
+
+    return Response(serializer.data)

@@ -156,27 +156,27 @@ class GymSerializer(serializers.ModelSerializer):
 
 class ProgramSerializer(serializers.ModelSerializer):
 
-    sessions = serializers.SerializerMethodField()
+    # sessions = serializers.SerializerMethodField()
 
     class Meta:
 
         model = Program
 
-        fields = ['id', 'name', 'coach', 'sessions', 'created_at', 'updated_at']
+        fields = ['id', 'name', 'coach', 'created_at', 'updated_at']
 
-    def get_sessions(self, obj):
+    # def get_sessions(self, obj):
 
-        program_id = obj.id
+    #     program_id = obj.id
 
-        sessions = program_session.objects.filter(program = program_id).order_by('session', 'week')
+    #     sessions = program_session.objects.filter(program = program_id).order_by('session', 'week')
 
-        return sessions
+    #     return sessions
         
 
 class program_sessionSerializer(serializers.ModelSerializer):
     class Meta:
         model = program_session
-        fields = ['id', 'program', 'session']
+        fields = ['id', 'program', 'session', 'week']
 
 class program_session_exerciseSerilaizer(serializers.ModelSerializer):
     class Meta:
@@ -286,3 +286,4 @@ class user_setSerializer(serializers.ModelSerializer):
     class Meta:
         model = user_set
         fields = ['id', 'athlete', 'session_set', 'status', 'active', 'updated_at']
+

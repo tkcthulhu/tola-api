@@ -25,5 +25,7 @@ urlpatterns = [
     path('gymAPI/', views.GymAPIView.as_view()),
     path('gymAPI/<str:pk>/', views.GymAPIView.as_view()),
     path('addUserToProgram/<int:program_id>/', views.addUserToProgram),
-    path('updateUserProgram/<int:program_id>/', views.updateUserProgram)
+    path('updateUserProgram/<int:program_id>/', views.updateUserProgram),
+    path('addNewSession/<int:program_id>/', views.addNewSession),
+    path('getProgramSessions/<int:program_id>/', views.getProgramSessions)
 ]
